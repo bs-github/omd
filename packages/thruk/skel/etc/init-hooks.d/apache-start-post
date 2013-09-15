@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# arguments are:
+# <initscriptname> <start|stop> <pre|post> <init script exitcode>
+
+waitfor() {
+    for i in $(seq 1 $1); do
+        test -S $2 && return 0
+        sleep 1
+    done
+    return 1
+}
+
+# check return code of apache start
+if [ $4 = 0 ]; then
+    (waitfor 30 $OMD_ROOT/tmp/run/live && ./etc/init.d/thruk start &) >/dev/null 2>&1
+fi
