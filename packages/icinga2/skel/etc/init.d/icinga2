@@ -26,6 +26,8 @@ ERROR_LOG=###ROOT###/var/log/icinga2/error.log
 USR=###SITE###
 GRP=###SITE###
 
+mkdir -p var/icinga2
+
 OPTIONS="-c $CFG_FILE -d -e ###ROOT###/var/log/icinga2/error.log --include=###ROOT###/etc/icinga2"
 
 # Fetches the pid of the currently running nagios process of the given
