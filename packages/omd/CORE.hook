@@ -21,21 +21,25 @@ make_link ()
 
 case "$1" in
     default)
-            if [ -e $OMD_ROOT/bin/nagios ] ; then echo "nagios" 
-            elif [ -e $OMD_ROOT/bin/icinga ] ; then echo "icinga" 
+            if [ -e $OMD_ROOT/bin/nagios4 ] ; then echo "nagios4"
+            elif [ -e $OMD_ROOT/bin/nagios ] ; then echo "nagios"
+            elif [ -e $OMD_ROOT/bin/icinga ] ; then echo "icinga"
+            elif [ -e $OMD_ROOT/bin/icinga2 ] ; then echo "icinga2"
             elif [ -e $OMD_ROOT/bin/shinken-arbiter ] ; then echo "shinken"
             else echo "none"
             fi
     ;;
     choices)
-            [ ! -e $OMD_ROOT/bin/nagios ] || echo "nagios: Nagios"
-            [ ! -e $OMD_ROOT/bin/icinga ] || echo "icinga: Icinga"
+            [ ! -e $OMD_ROOT/bin/nagios ] || echo "nagios: Nagios 3"
+            [ ! -e $OMD_ROOT/bin/nagios4 ] || echo "nagios: Nagios 4"
+            [ ! -e $OMD_ROOT/bin/icinga ] || echo "icinga: Icinga 1"
+            [ ! -e $OMD_ROOT/bin/icinga2 ] || echo "icinga: Icinga 2"
             [ ! -e $OMD_ROOT/bin/shinken-arbiter ] || echo "shinken: Shinken"
             echo "none: No monitoring core"
     ;;
     set)
         # cleanup the former selection
-        if [ "$2" != "nagios" ]
+        if [ "$2" != "nagios" -a "$2" != "nagios4" ]
         then
             rm -f $OMD_ROOT/etc/apache/conf.d/nagios.conf
             rm -f $OMD_ROOT/etc/apache/conf.d/icinga.conf
@@ -48,7 +52,7 @@ case "$1" in
         fi
         rm -f $OMD_ROOT/etc/init.d/core
         # now setup the new selection
-        if [ "$2" == "nagios" ]
+        if [ "$2" == "nagios" -o "$2" == "nagios4"  ]
         then
             make_link ../../nagios/apache.conf $OMD_ROOT/etc/apache/conf.d/nagios.conf 
             make_link ../../icinga/apache.conf $OMD_ROOT/etc/apache/conf.d/icinga.conf 
@@ -79,6 +83,25 @@ case "$1" in
             rm -f $OMD_ROOT/etc/apache/conf.d/nagios.conf
             rm -f $OMD_ROOT/etc/apache/conf.d/icinga.conf
             rm -f $OMD_ROOT/etc/apache/conf.d/shinken.conf
+        fi
+
+        if [ "$2" == "nagios4"  ]; then
+            sed -e 's/livestatus.o/livestatus4.o/'   -i etc/mk-livestatus/nagios.cfg
+            sed -e 's/npcdmod.o/npcdmod4.o/'         -i etc/pnp4nagios/nagios_npcdmod.cfg
+            sed -e 's/mod_gearman.o/mod_gearman4.o/' -i etc/mod-gearman/nagios.cfg
+            rm -f etc/nagios/nagios.d/nagios4.cfg
+            ln -s ../nagios4-specific.cfg etc/nagios/nagios.d/nagios4.cfg
+        else
+            sed -e 's/livestatus4.o/livestatus.o/'   -i etc/mk-livestatus/nagios.cfg
+            sed -e 's/npcdmod4.o/npcdmod.o/'         -i etc/pnp4nagios/nagios_npcdmod.cfg
+            sed -e 's/mod_gearman4.o/mod_gearman.o/' -i etc/mod-gearman/nagios.cfg
+            rm -f etc/nagios/nagios.d/nagios4.cfg
+        fi
+
+        if [ "$2" == "icinga2"  ]; then
+            make_link ../../nagios/apache.conf $OMD_ROOT/etc/apache/conf.d/nagios.conf
+            make_link ../../icinga/apache.conf $OMD_ROOT/etc/apache/conf.d/icinga.conf
+            make_link icinga2 $OMD_ROOT/etc/init.d/core
         fi
     ;;
 esac

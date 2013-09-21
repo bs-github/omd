@@ -37,7 +37,7 @@ cd ###ROOT###
 . .profile
 . lib/omd/init_profile
 . etc/omd/site.conf
-[ "$CONFIG_CORE" = "nagios" ] || exit 5
+[ "$CONFIG_CORE" = "nagios" -o "$CONFIG_CORE" = "nagios4" ] || exit 5
 
 BIN=###ROOT###/bin/nagios
 CFG_FILE=###ROOT###/tmp/nagios/nagios.cfg
@@ -54,6 +54,8 @@ GRP=###SITE###
 # avoid duplicate effort when being called by cmk -R or 
 # cmk -O.
 # export CORE_NOVERIFY=yes
+
+[ "$CONFIG_CORE" = "nagios4" ] && BIN=###ROOT###/bin/nagios4
 
 # Make sure that check plugins do not run localized.
 # check_icmp outputs performance data with german
