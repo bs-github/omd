@@ -31,6 +31,7 @@ PACKAGES=perl-modules \
          maintenance \
          gearmand \
          mod-gearman \
+         mod-gearman4 \
          patch \
          nail \
          notifications-tt
