@@ -1,0 +1,25 @@
+--- nagios/base/config.c.orig	2013-09-06 23:52:14.000000000 +0200
++++ nagios/base/config.c	2013-09-06 23:53:08.000000000 +0200
+@@ -1560,10 +1560,6 @@
+ 	/*****************************************/
+ 	/* check each service...                 */
+ 	/*****************************************/
+-	if(get_service_count() == 0) {
+-		logit(NSLOG_VERIFICATION_ERROR, TRUE, "Error: There are no services defined!");
+-		errors++;
+-		}
+ 	total_objects = 0;
+ 	for(temp_service = service_list; temp_service != NULL; temp_service = temp_service->next) {
+ 
+@@ -1643,11 +1639,6 @@
+ 	/*****************************************/
+ 	/* check all hosts...                    */
+ 	/*****************************************/
+-	if(get_host_count() == 0) {
+-		logit(NSLOG_VERIFICATION_ERROR, TRUE, "Error: There are no hosts defined!");
+-		errors++;
+-		}
+-
+ 	total_objects = 0;
+ 	for(temp_host = host_list; temp_host != NULL; temp_host = temp_host->next) {
+ 
