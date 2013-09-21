@@ -24,6 +24,8 @@ install:
 	cp $(DIR)/src/livestatus.o $(DESTDIR)$(OMD_ROOT)/lib/mk-livestatus/livestatus4.o
 
 skel:
+	mkdir -p $(SKEL)/etc/mk-livestatus
+	sed -e 's/livestatus.o/livestatus4.o/g' $(SKEL)/etc/mk-livestatus/nagios.cfg > $(SKEL)/etc/mk-livestatus/nagios4.cfg
 
 clean:
 	rm -rf mk-livestatus-*.*.*[0-9] sni-livestatus-*

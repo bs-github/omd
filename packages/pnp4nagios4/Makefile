@@ -46,5 +46,9 @@ install:
 	mkdir -p $(DESTDIR)$(OMD_ROOT)/lib
 	cp $(DIR)/src/npcdmod.o $(DESTDIR)$(OMD_ROOT)/lib/npcdmod4.o
 
+skel:
+	mkdir -p $(SKEL)/etc/pnp4nagios
+	sed -e 's/npcdmod.o/npcdmod4.o/g' $(SKEL)/etc/pnp4nagios/nagios_npcdmod.cfg > $(SKEL)/etc/pnp4nagios/nagios_npcdmod4.cfg
+
 clean:
 	rm -rf $(DIR)

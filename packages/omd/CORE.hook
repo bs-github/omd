@@ -31,9 +31,9 @@ case "$1" in
     ;;
     choices)
             [ ! -e $OMD_ROOT/bin/nagios ] || echo "nagios: Nagios 3"
-            [ ! -e $OMD_ROOT/bin/nagios4 ] || echo "nagios: Nagios 4"
+            [ ! -e $OMD_ROOT/bin/nagios4 ] || echo "nagios4: Nagios 4"
             [ ! -e $OMD_ROOT/bin/icinga ] || echo "icinga: Icinga 1"
-            [ ! -e $OMD_ROOT/bin/icinga2 ] || echo "icinga: Icinga 2"
+            [ ! -e $OMD_ROOT/bin/icinga2 ] || echo "icinga2: Icinga 2"
             [ ! -e $OMD_ROOT/bin/shinken-arbiter ] || echo "shinken: Shinken"
             echo "none: No monitoring core"
     ;;
@@ -60,9 +60,9 @@ case "$1" in
             # Beware: do not change the number of spaces before '='. Otherwise we will get severe
             # merge conflicts at 'omd mv'
             sed -i -e "s|^nagios_binary[[:space:]]*=.*$|nagios_binary               = '$OMD_ROOT/bin/$2'|" $OMD_ROOT/etc/check_mk/defaults
-            sed -i -e "s|^nagios_config_file[[:space:]]*=.*$|nagios_config_file          = '$OMD_ROOT/tmp/$2/$2.cfg'|" $OMD_ROOT/etc/check_mk/defaults
-            sed -i -e "s|^nagios_url[[:space:]]*=.*$|nagios_url                  = '/$OMD_SITE/$2'|" $OMD_ROOT/etc/check_mk/defaults
-            sed -i -e "s|^nagios_cgi_url[[:space:]]*=.*$|nagios_cgi_url              = '/$OMD_SITE/$2/cgi-bin'|" $OMD_ROOT/etc/check_mk/defaults
+            sed -i -e "s|^nagios_config_file[[:space:]]*=.*$|nagios_config_file          = '$OMD_ROOT/tmp/nagios/nagios.cfg'|" $OMD_ROOT/etc/check_mk/defaults
+            sed -i -e "s|^nagios_url[[:space:]]*=.*$|nagios_url                  = '/$OMD_SITE/nagios'|" $OMD_ROOT/etc/check_mk/defaults
+            sed -i -e "s|^nagios_cgi_url[[:space:]]*=.*$|nagios_cgi_url              = '/$OMD_SITE/nagios/cgi-bin'|" $OMD_ROOT/etc/check_mk/defaults
         elif [ "$2" == "icinga" ]
         then
             make_link ../../nagios/apache.conf $OMD_ROOT/etc/apache/conf.d/nagios.conf 
@@ -86,15 +86,15 @@ case "$1" in
         fi
 
         if [ "$2" == "nagios4"  ]; then
-            sed -e 's/livestatus.o/livestatus4.o/'   -i etc/mk-livestatus/nagios.cfg
-            sed -e 's/npcdmod.o/npcdmod4.o/'         -i etc/pnp4nagios/nagios_npcdmod.cfg
-            sed -e 's/mod_gearman.o/mod_gearman4.o/' -i etc/mod-gearman/nagios.cfg
+            rm -f etc/nagios/nagios.d/mk-livestatus.cfg
+            rm -f etc/nagios/nagios.d/mk-livestatus4.cfg
+            ln -s ../../mk-livestatus/nagios4.cfg etc/nagios/nagios.d/mk-livestatus4.cfg
             rm -f etc/nagios/nagios.d/nagios4.cfg
             ln -s ../nagios4-specific.cfg etc/nagios/nagios.d/nagios4.cfg
         else
-            sed -e 's/livestatus4.o/livestatus.o/'   -i etc/mk-livestatus/nagios.cfg
-            sed -e 's/npcdmod4.o/npcdmod.o/'         -i etc/pnp4nagios/nagios_npcdmod.cfg
-            sed -e 's/mod_gearman4.o/mod_gearman.o/' -i etc/mod-gearman/nagios.cfg
+            rm -f etc/nagios/nagios.d/mk-livestatus.cfg
+            rm -f etc/nagios/nagios.d/mk-livestatus4.cfg
+            ln -s ../../mk-livestatus/nagios.cfg etc/nagios/nagios.d/mk-livestatus.cfg
             rm -f etc/nagios/nagios.d/nagios4.cfg
         fi
 
@@ -103,6 +103,9 @@ case "$1" in
             make_link ../../icinga/apache.conf $OMD_ROOT/etc/apache/conf.d/icinga.conf
             make_link icinga2 $OMD_ROOT/etc/init.d/core
         fi
+        # refresh some hooks
+        [ "$CONFIG_PNP4NAGIOS" ]  && CONFIG_CORE="$2" $OMD_ROOT/lib/omd/hooks/PNP4NAGIOS  set "$CONFIG_PNP4NAGIOS"
+        [ "$CONFIG_GEARMAN_NEB" ] && CONFIG_CORE="$2" $OMD_ROOT/lib/omd/hooks/GEARMAN_NEB set "$CONFIG_GEARMAN_NEB"
     ;;
 esac
 

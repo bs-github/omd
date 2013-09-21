@@ -18,7 +18,8 @@ install:
 	cp $(DIR)/mod_gearman.o $(DESTDIR)$(OMD_ROOT)/lib/mod_gearman/mod_gearman4.o
 
 skel:
-
+	mkdir -p $(SKEL)/etc/mod-gearman/
+	sed -e 's/mod_gearman.o/mod_gearman4.o/g' $(SKEL)/etc/mod-gearman/nagios.cfg > $(SKEL)/etc/mod-gearman/nagios4.cfg
 
 clean:
 	rm -rf $(DIR)
