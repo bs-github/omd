@@ -25,6 +25,7 @@ PACKAGES=perl-modules \
          nsca \
          omd \
          pnp4nagios \
+         pnp4nagios4 \
          rrdtool \
          shinken \
          thruk \
