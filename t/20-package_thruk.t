@@ -142,7 +142,7 @@ my $urls = [
   { url => '/thruk/cgi-bin/trends.cgi?host='.$host.'&service='.$service.'&t1=1264820912&t2=1265425712&includesoftstates=no&assumestateretention=yes&assumeinitialstates=yes&assumestatesduringnotrunning=yes&initialassumedservicestate=0&backtrack=4', 'like' => '/Host and Service State Trends/' },
 
 # statusmap
-  { url => '/thruk/cgi-bin/statusmap.cgi?host=all', like => '/Network Map For All Hosts/' },
+  { url => '/thruk/cgi-bin/statusmap.cgi?host=all', like => '/Network Map/' },
 
 # minemap
   { url => '/thruk/cgi-bin/minemap.cgi', like => '/Mine Map/' },
@@ -178,7 +178,7 @@ for my $url ( @{$urls} ) {
     $url->{'unlike'} = [ '/internal server error/', '/"\/thruk\//', '/\'\/thruk\//' ];
 }
 
-for my $core (qw/nagios shinken icinga/) {
+for my $core (qw/nagios icinga shinken/) {
     ##################################################
     # run our tests
     TestUtils::test_command({ cmd => $omd_bin." stop $site" });
