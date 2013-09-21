@@ -32,6 +32,7 @@ PACKAGES=perl-modules \
          gearmand \
          mod-gearman \
          mod-gearman4 \
+         mk-livestatus4 \
          patch \
          nail \
          notifications-tt
