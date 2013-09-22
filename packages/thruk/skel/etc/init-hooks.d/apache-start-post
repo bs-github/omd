@@ -5,9 +5,9 @@
 
 waitfor() {
     for i in $(seq 1 $1); do
+        sleep 2
         test -e ###ROOT###/tmp/apache/run/apache.pid || return 1 # only if apache is running, we don't want to break omd rm
         test -e $2 && return 0
-        sleep 1
     done
     return 1
 }
