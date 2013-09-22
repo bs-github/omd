@@ -24,6 +24,7 @@ build:
 	$(MAKE) -C $(DIR) all
 
 install:
+	$(MAKE) DESTDIR=$(DESTDIR) -C $(DIR) install-cgis
 	mkdir -p $(DESTDIR)$(OMD_ROOT)/bin
 	cp $(DIR)/base/nagios $(DESTDIR)$(OMD_ROOT)/bin/nagios4
 	chmod 755 $(DESTDIR)$(OMD_ROOT)/bin/nagios4
